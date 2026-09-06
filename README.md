@@ -2,6 +2,16 @@
 
 24개의 질문으로 알아보는 나의 MBTI. 16가지 애니메이션 스타일 캐릭터 중 나와 닮은 유형을 찾고 친구에게 공유하는 웹앱입니다.
 
+## 스크린샷
+
+| 홈 | 테스트 |
+| --- | --- |
+| ![홈 화면](docs/screenshot-home.jpg) | ![테스트 진행 화면](docs/screenshot-quiz.jpg) |
+
+| 결과 | 유형 갤러리 |
+| --- | --- |
+| ![결과 화면](docs/screenshot-result.jpg) | ![유형 갤러리](docs/screenshot-gallery.jpg) |
+
 ## 주요 기능
 
 - 24문항(4축 각 6문항) 리커트 5점 설문 → 4축(E/I, S/N, T/F, J/P) 점수 집계 → 16유형 판정
