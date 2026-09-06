@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
+import { cn } from '@/lib/cn'
 import { ThemeToggle } from './theme-toggle'
 
 interface PageShellProps {
@@ -9,7 +10,14 @@ interface PageShellProps {
 export function PageShell({ children }: PageShellProps) {
   return (
     <div className="flex min-h-dvh flex-col bg-paper text-ink transition-colors dark:bg-slate-950 dark:text-slate-100">
-      <header className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white"
+      >
+        본문 바로가기
+      </a>
+
+      <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 py-4">
         <Link
           to="/"
           className="flex items-center gap-2 text-lg font-extrabold tracking-tight"
@@ -19,10 +27,23 @@ export function PageShell({ children }: PageShellProps) {
           </span>
           애니 MBTI
         </Link>
-        <ThemeToggle />
+        <nav className="flex items-center gap-1.5">
+          <NavLink
+            to="/types"
+            className={({ isActive }) =>
+              cn(
+                'rounded-full px-3 py-1.5 text-sm font-semibold transition hover:bg-black/5 dark:hover:bg-white/10',
+                isActive && 'bg-black/5 dark:bg-white/10',
+              )
+            }
+          >
+            유형 갤러리
+          </NavLink>
+          <ThemeToggle />
+        </nav>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-16">
+      <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 pb-16">
         {children}
       </main>
 

@@ -110,6 +110,10 @@ export default function QuizPage() {
 
   return (
     <section className="py-8">
+      <p className="sr-only" aria-live="polite">
+        {total}문항 중 {index + 1}번째 문항입니다. {answeredCount}문항 답변 완료.
+      </p>
+
       <div className="mb-8 flex items-center gap-3">
         <button
           type="button"

@@ -67,12 +67,34 @@ SPA 특성상 크롤러가 런타임에서 바꾼 메타태그를 읽지 못할 
 
 ## 배포
 
-정적 SPA 이므로 어떤 정적 호스팅에도 배포할 수 있습니다.
+정적 SPA 이므로 어떤 정적 호스팅에도 배포할 수 있습니다. 빌드 산출물은 `dist/` 입니다.
 
-- **Vercel / Netlify**: 프레임워크 프리셋 자동 감지. SPA fallback(모든 경로 → `index.html`) 설정 필요.
-- **GitHub Pages**: `VITE_BASE=/<레포지토리명>/` 로 빌드하고 `dist` 를 배포. 404 처리를 위해 `index.html` 을 `404.html` 로도 복사.
+### Vercel
 
-> OG 이미지 규칙과 SPA 크롤러 한계는 `public/og/README.md` 참고.
+- Framework Preset: **Vite**, Build Command `npm run build`, Output `dist`
+- SPA 라우팅 폴백은 Vercel 이 자동 처리합니다. 필요 시 `vercel.json`:
+
+  ```json
+  { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+  ```
+
+### Netlify
+
+- Build Command `npm run build`, Publish directory `dist`
+- `public/_redirects` 파일에 한 줄 추가: `/*  /index.html  200`
+
+### GitHub Pages
+
+- `VITE_BASE=/<레포지토리명>/ npm run build` 로 빌드 (하위 경로 대응)
+- `dist` 를 `gh-pages` 브랜치에 배포하고, `dist/index.html` 을 `dist/404.html` 로 복사해
+  새로고침·딥링크에서도 SPA 가 뜨도록 합니다.
+
+## 알려진 한계
+
+- **크롤러 OG 미리보기**: SPA 라 런타임에서 바꾼 메타태그를 일부 크롤러가 못 읽습니다.
+  유형별 정확한 미리보기는 `public/og/<CODE>.png` 정적 이미지 + (선택) 프리렌더링으로 보완하세요.
+- **카카오 공유**: `VITE_KAKAO_JS_KEY` 와 도메인 등록이 있어야 동작합니다. 없으면 버튼이 숨겨집니다.
+- **결과 정확도**: 24문항 간이 검사이며 정식 MBTI 진단을 대체하지 않습니다.
 
 ## 프로젝트 구조
 
