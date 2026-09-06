@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { MatchCard } from '@/components/result/match-card'
@@ -9,6 +9,8 @@ import { mbtiTypes } from '@/data/mbti-types'
 import { questions } from '@/data/questions'
 import { computeResult, isValidMbtiCode } from '@/lib/scoring'
 import { clearQuizProgress, loadQuizProgress } from '@/lib/progress'
+import { applySeo } from '@/lib/seo'
+import { buildSharePayload } from '@/lib/share'
 import { type AxisResult } from '@/types'
 
 function InvalidNotice() {
@@ -33,6 +35,7 @@ export default function ResultPage() {
   const { type } = useParams()
   const normalized = (type ?? '').toUpperCase()
   const validCode = isValidMbtiCode(normalized) ? normalized : null
+  const cardRef = useRef<HTMLElement>(null)
 
   // 방금 퀴즈를 끝낸 사람이면 저장된 응답으로 실제 성향 세기를 계산한다
   const axes = useMemo<AxisResult[] | null>(() => {
@@ -43,6 +46,18 @@ export default function ResultPage() {
     return result.code === validCode ? result.axes : null
   }, [validCode])
 
+  // 결과 유형에 맞춰 제목·OG 메타를 갱신하고, 벗어날 때 원래대로 되돌린다
+  useEffect(() => {
+    if (!validCode) return
+    const payload = buildSharePayload(validCode)
+    return applySeo({
+      title: `${payload.title} | 애니 MBTI`,
+      description: mbtiTypes[validCode].description,
+      imageUrl: payload.imageUrl,
+      url: payload.url,
+    })
+  }, [validCode])
+
   if (!validCode) return <InvalidNotice />
 
   const info = mbtiTypes[validCode]
@@ -50,6 +65,7 @@ export default function ResultPage() {
   return (
     <div className="py-8">
       <article
+        ref={cardRef}
         id="result-card"
         className="space-y-8 rounded-3xl bg-paper p-4 dark:bg-slate-950"
       >
@@ -104,7 +120,7 @@ export default function ResultPage() {
       </article>
 
       <div className="mt-6">
-        <ShareBar code={validCode} />
+        <ShareBar code={validCode} captureRef={cardRef} />
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">

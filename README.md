@@ -40,6 +40,31 @@ npm run preview             # 빌드 결과 미리보기
 | `VITE_SITE_URL` | 공유 링크·OG 태그에 쓰이는 정식 URL | 선택 |
 | `VITE_BASE` | 하위 경로 배포 시 base 경로 (예: `/anime-mbti/`) | 선택 |
 
+## 소셜 공유
+
+결과 페이지에서 4가지 방법으로 공유할 수 있습니다.
+
+- **카카오톡**: `VITE_KAKAO_JS_KEY` 설정 시에만 버튼이 보입니다. 카카오 SDK 는 필요할 때
+  동적으로 로드됩니다. [카카오 개발자 콘솔](https://developers.kakao.com)에서 앱을 만들고
+  **플랫폼 > Web** 에 배포 도메인을 등록해야 합니다. 키가 없거나 도메인 미등록이면
+  앱은 정상 동작하고 나머지 공유 수단으로 대체됩니다.
+- **X(트위터)**: 별도 설정 없이 인텐트 URL 로 동작합니다.
+- **기본 공유(Web Share API)**: `navigator.share` 지원 환경(주로 모바일)에서만 노출됩니다.
+- **링크 복사**: 클립보드에 결과 URL 을 복사합니다.
+- **이미지 저장**: 결과 카드를 PNG 로 내려받습니다(`html-to-image`, 동적 로드).
+
+### OG(Open Graph) 이미지
+
+SPA 특성상 크롤러가 런타임에서 바꾼 메타태그를 읽지 못할 수 있습니다. 유형별 미리보기 이미지는
+정적 파일 규칙을 따릅니다.
+
+- 기본: `public/og/default.png` (1200×630)
+- 유형별: `public/og/<CODE>.png` — 예 `public/og/INTJ.png`
+
+`src/lib/share.ts` 의 `buildSharePayload()` 가 `${origin}${BASE_URL}og/<CODE>.png` 로 URL 을
+생성합니다. 파일이 없으면 미리보기 이미지만 비고 공유 자체는 정상입니다. 정확한 유형별
+미리보기가 필요하면 배포 파이프라인에서 라우트별 프리렌더링을 추가하세요.
+
 ## 배포
 
 정적 SPA 이므로 어떤 정적 호스팅에도 배포할 수 있습니다.

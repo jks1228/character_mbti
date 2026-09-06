@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
 import ResultPage from '@/routes/result'
+import { ToastProvider } from '@/components/ui/toast'
 import { mbtiTypes } from '@/data/mbti-types'
 import { questions } from '@/data/questions'
 import { QUIZ_PROGRESS_KEY, loadQuizProgress } from '@/lib/progress'
@@ -9,13 +10,15 @@ import { type AnswerMap } from '@/types'
 
 function renderResult(path: string) {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route path="/result/:type" element={<ResultPage />} />
-        <Route path="/types" element={<div>갤러리</div>} />
-        <Route path="/quiz" element={<div>퀴즈</div>} />
-      </Routes>
-    </MemoryRouter>,
+    <ToastProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route path="/result/:type" element={<ResultPage />} />
+          <Route path="/types" element={<div>갤러리</div>} />
+          <Route path="/quiz" element={<div>퀴즈</div>} />
+        </Routes>
+      </MemoryRouter>
+    </ToastProvider>,
   )
 }
 
